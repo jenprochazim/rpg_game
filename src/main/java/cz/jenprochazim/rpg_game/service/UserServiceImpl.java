@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -50,5 +51,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll().stream()
                 .map(user -> userMapper.toUserDTO(user))
                 .toList();
+    }
+
+    @Override
+    public UserDTO getUser(Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        return userMapper.toUserDTO(user);
     }
 }
