@@ -1,5 +1,6 @@
 package cz.jenprochazim.rpg_game.controller;
 
+import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
 import cz.jenprochazim.rpg_game.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -19,10 +20,10 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<UserEntity> createUser(@RequestBody @Valid UserEntity user) {
+    public ResponseEntity<Void> createUser(@RequestBody @Valid UserRegistrationDTO user) {
 
-        userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
