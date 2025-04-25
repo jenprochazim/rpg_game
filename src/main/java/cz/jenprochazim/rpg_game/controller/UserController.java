@@ -1,5 +1,6 @@
 package cz.jenprochazim.rpg_game.controller;
 
+import cz.jenprochazim.rpg_game.dto.UserDTO;
 import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
 import cz.jenprochazim.rpg_game.repository.UserRepository;
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserEntity> getAllUsers(){
+    public List<UserDTO> getAllUsers(){
         return userService.getAllUsers();
     }
 }

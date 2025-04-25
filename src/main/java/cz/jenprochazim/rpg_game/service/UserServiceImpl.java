@@ -1,6 +1,7 @@
 package cz.jenprochazim.rpg_game.service;
 
 import cz.jenprochazim.rpg_game.config.SecurityConfig;
+import cz.jenprochazim.rpg_game.dto.UserDTO;
 import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
 import cz.jenprochazim.rpg_game.mapper.UserMapper;
@@ -45,7 +46,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> userMapper.toUserDTO(user))
+                .toList();
     }
 }
