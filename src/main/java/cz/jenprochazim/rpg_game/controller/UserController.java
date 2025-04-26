@@ -2,6 +2,7 @@ package cz.jenprochazim.rpg_game.controller;
 
 import cz.jenprochazim.rpg_game.dto.UserDTO;
 import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
+import cz.jenprochazim.rpg_game.dto.UserUpdateDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
 import cz.jenprochazim.rpg_game.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -38,9 +39,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserUpdateDTO updatedUser) {
+        return ResponseEntity.ok(userService.updateUser(updatedUser, id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

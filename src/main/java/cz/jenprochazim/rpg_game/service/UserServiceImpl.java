@@ -3,6 +3,7 @@ package cz.jenprochazim.rpg_game.service;
 import cz.jenprochazim.rpg_game.config.SecurityConfig;
 import cz.jenprochazim.rpg_game.dto.UserDTO;
 import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
+import cz.jenprochazim.rpg_game.dto.UserUpdateDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
 import cz.jenprochazim.rpg_game.exceptions.UserNotFoundException;
 import cz.jenprochazim.rpg_game.mapper.UserMapper;
@@ -41,9 +42,8 @@ public class UserServiceImpl implements UserService {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
         try {
-        userRepository.save(user);
-        }
-        catch(DataIntegrityViolationException e) {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Přihlašovací jméno už existuje");
         }
     }
@@ -57,12 +57,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUser(Long id) {
+
+        return userMapper.toUserDTO(getUserEntity(id));
+    }
+
+    @Override
+    public UserEntity getUserEntity(Long id) {
         try {
-            UserEntity user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Uzivatel nenalezen"));
-            return userMapper.toUserDTO(user);
-        }
-        catch (UserNotFoundException e)
-        {
+            return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Uzivatel nenalezen"));
+        } catch (UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
         }
@@ -71,5 +74,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDTO updateUser(UserUpdateDTO updatedUser, Long id) {
+        UserEntity user = getUserEntity(id);
+        user.setUserName(updatedUser.getUserName());
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Přihlašovací jméno už existuje");
+        }
+
+        return userMapper.toUserDTO(user);
     }
 }
