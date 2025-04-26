@@ -1,6 +1,7 @@
 package cz.jenprochazim.rpg_game.service;
 
 import cz.jenprochazim.rpg_game.dto.UserDTO;
+import cz.jenprochazim.rpg_game.dto.UserLoginDTO;
 import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
 import cz.jenprochazim.rpg_game.dto.UserUpdateDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
@@ -14,5 +15,7 @@ public interface UserService {
     UserDTO getUser(Long id);
     void deleteUser(Long id);
     UserDTO updateUser (UserUpdateDTO updatedUser, Long id);
-    public UserEntity getUserEntity(Long id);
+    UserEntity getUserEntity(Long id);
+    UserDTO logIn(UserLoginDTO userLoginDTO);
+
 }

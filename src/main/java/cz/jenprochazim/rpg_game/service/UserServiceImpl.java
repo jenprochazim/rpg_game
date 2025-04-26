@@ -1,7 +1,7 @@
 package cz.jenprochazim.rpg_game.service;
 
-import cz.jenprochazim.rpg_game.config.SecurityConfig;
 import cz.jenprochazim.rpg_game.dto.UserDTO;
+import cz.jenprochazim.rpg_game.dto.UserLoginDTO;
 import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
 import cz.jenprochazim.rpg_game.dto.UserUpdateDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
@@ -11,14 +11,11 @@ import cz.jenprochazim.rpg_game.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -57,18 +54,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUser(Long id) {
-
         return userMapper.toUserDTO(getUserEntity(id));
     }
 
     @Override
     public UserEntity getUserEntity(Long id) {
-        try {
-            return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Uzivatel nenalezen"));
-        } catch (UserNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
+        UserEntity user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Uzivatel nenalezen");
         }
+        return user;
+    }
+
+    @Override
+    public UserDTO logIn(UserLoginDTO userLoginDTO) {
+        UserEntity user = userRepository.findByUserName(userLoginDTO.getUserName()).orElse(null);
+        if (user == null || !passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Spatne uzivatelske jmeno nebo heslo");
+        }
+        return userMapper.toUserDTO(user);
     }
 
     @Override
@@ -85,7 +90,6 @@ public class UserServiceImpl implements UserService {
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Přihlašovací jméno už existuje");
         }
-
         return userMapper.toUserDTO(user);
     }
 }

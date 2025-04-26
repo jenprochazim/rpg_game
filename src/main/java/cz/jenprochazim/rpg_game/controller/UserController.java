@@ -1,6 +1,7 @@
 package cz.jenprochazim.rpg_game.controller;
 
 import cz.jenprochazim.rpg_game.dto.UserDTO;
+import cz.jenprochazim.rpg_game.dto.UserLoginDTO;
 import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
 import cz.jenprochazim.rpg_game.dto.UserUpdateDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
@@ -21,8 +22,13 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> login(@RequestBody UserLoginDTO user) {
 
-    @PostMapping
+        return ResponseEntity.ok(userService.logIn(user));
+    }
+
+    @PostMapping("/registration")
     public ResponseEntity<Void> createUser(@RequestBody @Valid UserRegistrationDTO user) {
 
         userService.createUser(user);
