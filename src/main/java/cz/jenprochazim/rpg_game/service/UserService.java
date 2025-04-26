@@ -9,4 +9,5 @@ public interface UserService {
     void createUser(UserRegistrationDTO user);
     List <UserDTO> getAllUsers();
     UserDTO getUser(Long id);
+    void deleteUser(Long id);
 }
