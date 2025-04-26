@@ -4,12 +4,14 @@ import cz.jenprochazim.rpg_game.config.SecurityConfig;
 import cz.jenprochazim.rpg_game.dto.UserDTO;
 import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
+import cz.jenprochazim.rpg_game.exceptions.UserNotFoundException;
 import cz.jenprochazim.rpg_game.mapper.UserMapper;
 import cz.jenprochazim.rpg_game.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,7 +57,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUser(Long id) {
-        UserEntity user = userRepository.findById(id).orElse(null);
-        return userMapper.toUserDTO(user);
+        try {
+            UserEntity user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Uzivatel nenalezen"));
+            return userMapper.toUserDTO(user);
+        }
+        catch (UserNotFoundException e)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+
+        }
     }
 }

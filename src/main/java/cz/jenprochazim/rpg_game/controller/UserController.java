@@ -37,4 +37,6 @@ public class UserController {
     public UserDTO getUser(@PathVariable Long id) {
         return userService.getUser(id);
     }
+
+
 }
