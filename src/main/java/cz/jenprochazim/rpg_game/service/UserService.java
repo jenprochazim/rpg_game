@@ -1,9 +1,6 @@
 package cz.jenprochazim.rpg_game.service;
 
-import cz.jenprochazim.rpg_game.dto.UserDTO;
-import cz.jenprochazim.rpg_game.dto.UserLoginDTO;
-import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
-import cz.jenprochazim.rpg_game.dto.UserUpdateDTO;
+import cz.jenprochazim.rpg_game.dto.*;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
 
 import java.util.List;
@@ -17,5 +14,5 @@ public interface UserService {
     UserDTO updateUser (UserUpdateDTO updatedUser, Long id);
     UserEntity getUserEntity(Long id);
     UserDTO logIn(UserLoginDTO userLoginDTO);
-
+    void changePassword(UserChangePasswordDTO user, Long id);
 }

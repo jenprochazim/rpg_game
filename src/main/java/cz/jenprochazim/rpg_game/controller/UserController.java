@@ -1,9 +1,6 @@
 package cz.jenprochazim.rpg_game.controller;
 
-import cz.jenprochazim.rpg_game.dto.UserDTO;
-import cz.jenprochazim.rpg_game.dto.UserLoginDTO;
-import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
-import cz.jenprochazim.rpg_game.dto.UserUpdateDTO;
+import cz.jenprochazim.rpg_game.dto.*;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
 import cz.jenprochazim.rpg_game.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -24,13 +21,17 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(@RequestBody UserLoginDTO user) {
-
         return ResponseEntity.ok(userService.logIn(user));
+    }
+
+    @PutMapping("/changePassword/{id}")
+    public ResponseEntity<Void> changePassword(@RequestBody UserChangePasswordDTO user, @PathVariable Long id) {
+        userService.changePassword(user, id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/registration")
     public ResponseEntity<Void> createUser(@RequestBody @Valid UserRegistrationDTO user) {
-
         userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

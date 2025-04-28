@@ -1,9 +1,6 @@
 package cz.jenprochazim.rpg_game.service;
 
-import cz.jenprochazim.rpg_game.dto.UserDTO;
-import cz.jenprochazim.rpg_game.dto.UserLoginDTO;
-import cz.jenprochazim.rpg_game.dto.UserRegistrationDTO;
-import cz.jenprochazim.rpg_game.dto.UserUpdateDTO;
+import cz.jenprochazim.rpg_game.dto.*;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
 import cz.jenprochazim.rpg_game.exceptions.UserNotFoundException;
 import cz.jenprochazim.rpg_game.mapper.UserMapper;
@@ -14,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @Service
@@ -31,6 +27,15 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDTO logIn(UserLoginDTO userLoginDTO) {
+        UserEntity user = userRepository.findByUserName(userLoginDTO.getUserName()).orElse(null);
+        if (user == null || !passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Spatne uzivatelske jmeno nebo heslo");
+        }
+        return userMapper.toUserDTO(user);
     }
 
     @Override
@@ -59,7 +64,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserEntity(Long id) {
-
         UserEntity user = userRepository.findById(id).orElse(null);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Uzivatel nenalezen");
@@ -68,18 +72,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO logIn(UserLoginDTO userLoginDTO) {
-        UserEntity user = userRepository.findByUserName(userLoginDTO.getUserName()).orElse(null);
-        if (user == null || !passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Spatne uzivatelske jmeno nebo heslo");
-        }
-        return userMapper.toUserDTO(user);
-    }
-
-    @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
 
     @Override
     public UserDTO updateUser(UserUpdateDTO updatedUser, Long id) {
@@ -92,4 +88,18 @@ public class UserServiceImpl implements UserService {
         }
         return userMapper.toUserDTO(user);
     }
+
+    @Override
+    public void changePassword(UserChangePasswordDTO updatedUser, Long id) {
+        UserEntity user = getUserEntity(id);
+        if (!passwordEncoder.matches(updatedUser.getCurrentPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Spatne heslo.");
+        } else {
+            System.out.println("Puvodni heslo zmeneno na: " + updatedUser.getNewPassword());
+            String hashedPassword = passwordEncoder.encode(updatedUser.getNewPassword());
+            user.setPassword(hashedPassword);
+            userRepository.save(user);
+        }
+    }
+
 }
