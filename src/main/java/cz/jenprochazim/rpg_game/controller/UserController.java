@@ -24,12 +24,6 @@ public class UserController {
         return ResponseEntity.ok(userService.logIn(user));
     }
 
-    @PutMapping("/changePassword/{id}")
-    public ResponseEntity<Void> changePassword(@RequestBody UserChangePasswordDTO user, @PathVariable Long id) {
-        userService.changePassword(user, id);
-        return ResponseEntity.noContent().build();
-    }
-
     @PostMapping("/registration")
     public ResponseEntity<Void> createUser(@RequestBody @Valid UserRegistrationDTO user) {
         userService.createUser(user);
@@ -49,6 +43,12 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserUpdateDTO updatedUser) {
         return ResponseEntity.ok(userService.updateUser(updatedUser, id));
+    }
+
+    @PutMapping("/{id}/changePassword")
+    public ResponseEntity<Void> changePassword(@RequestBody UserChangePasswordDTO user, @PathVariable Long id) {
+        userService.changePassword(user, id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
