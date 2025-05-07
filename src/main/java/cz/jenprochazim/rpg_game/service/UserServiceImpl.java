@@ -40,6 +40,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(UserRegistrationDTO userDTO) {
+        if(userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email již existuje");
+        }
         UserEntity user = userMapper.fromUserRegistrationDTO(userDTO);
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
@@ -80,7 +83,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(UserUpdateDTO updatedUser, Long id) {
         UserEntity user = getUserEntity(id);
-        user.setUserName(updatedUser.getUserName());
+        if (!updatedUser.getUserName().isBlank())
+            user.setUserName(updatedUser.getUserName());
+        if (!updatedUser.getEmail().isBlank())
+        user.setEmail(updatedUser.getEmail());
         try {
             userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
