@@ -1,4 +1,4 @@
-package cz.jenprochazim.rpg_game.dto;
+package cz.jenprochazim.rpg_game.dto.userDTO;
 
 import lombok.Getter;
 import lombok.Setter;

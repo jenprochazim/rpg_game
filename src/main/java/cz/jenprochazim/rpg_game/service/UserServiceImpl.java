@@ -1,8 +1,7 @@
 package cz.jenprochazim.rpg_game.service;
 
-import cz.jenprochazim.rpg_game.dto.*;
+import cz.jenprochazim.rpg_game.dto.userDTO.*;
 import cz.jenprochazim.rpg_game.entity.UserEntity;
-import cz.jenprochazim.rpg_game.exceptions.UserNotFoundException;
 import cz.jenprochazim.rpg_game.mapper.UserMapper;
 import cz.jenprochazim.rpg_game.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
