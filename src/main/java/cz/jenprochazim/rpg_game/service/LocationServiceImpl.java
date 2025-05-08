@@ -18,9 +18,14 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public void createLocation(LocationDTO newLocation) {
-        System.out.println("service DTO>> " + newLocation.getTerrainType());
+        if(!isLocationUnique(newLocation.getR(), newLocation.getP())) {
+            throw new IllegalArgumentException("Lokace na techto souradnicich jiz existuje");
+        }
         LocationEntity location = locationMapper.toLocationEntity(newLocation);
-        System.out.println("service entity>> " + location.getTerrainType());
         locationRepository.save(location);
+    }
+
+    private boolean isLocationUnique(int r, int p) {
+        return locationRepository.findByRAndP(r, p).isEmpty();
     }
 }

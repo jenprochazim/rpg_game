@@ -19,7 +19,6 @@ public class LocationController {
 
     @PostMapping("/createLocation")
     public ResponseEntity<Void> createLocation(@RequestBody LocationDTO newLocation) {
-        System.out.println("controller DTO>> " + newLocation.getTerrainType());
         locationService.createLocation(newLocation);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
