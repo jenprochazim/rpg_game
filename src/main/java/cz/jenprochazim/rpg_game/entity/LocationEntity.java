@@ -16,13 +16,14 @@ import lombok.Setter;
 public class LocationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
 
-    private String describtion;
+    private String description;
 
     @Enumerated (EnumType.STRING)
+    @Column(name = "terrain_type")
     private TerrainType terrainType;
 
     @ManyToOne(fetch = FetchType.LAZY)
