@@ -31,19 +31,24 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public void updateLocation(LocationDTO updatedLocation) {
         LocationEntity location = getLocationByCoordinates(updatedLocation.getR(), updatedLocation.getP());
-        if (!updatedLocation.getName().isBlank()) {
+        if (updatedLocation.getName() != null && !updatedLocation.getName().isBlank()) {
             location.setName(updatedLocation.getName());
         }
-        if (!updatedLocation.getDescription().isBlank()) {
+        if (updatedLocation.getDescription() != null && !updatedLocation.getDescription().isBlank()) {
             location.setDescription(updatedLocation.getDescription());
         }
         if (updatedLocation.getTerrainType() != null) {
             location.setTerrainType(updatedLocation.getTerrainType());
         }
-        if (!updatedLocation.getNote().isBlank()) {
+        if (updatedLocation.getNote() != null && !updatedLocation.getNote().isBlank()) {
             location.setNote(updatedLocation.getNote());
         }
         locationRepository.save(location);
+    }
+
+    @Override
+    public LocationDTO getActualLocation(Integer p, Integer r) {
+        return locationMapper.toLocationDTO(getLocationByCoordinates(p,r));
     }
 
     private LocationEntity getLocationByCoordinates(int r, int p) {

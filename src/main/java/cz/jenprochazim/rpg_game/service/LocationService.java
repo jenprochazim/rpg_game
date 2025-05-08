@@ -6,4 +6,6 @@ public interface LocationService {
     void createLocation(LocationDTO newLocation);
 
     void updateLocation(LocationDTO updatedLocation);
+
+    LocationDTO getActualLocation(Integer p, Integer r);
 }

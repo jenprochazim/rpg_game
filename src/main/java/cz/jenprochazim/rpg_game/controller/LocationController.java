@@ -21,6 +21,11 @@ public class LocationController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @GetMapping("actual/{p}/{r}")
+    public ResponseEntity<LocationDTO> getActualLocation(@PathVariable Integer p, @PathVariable Integer r){
+        return ResponseEntity.ok(locationService.getActualLocation(p,r));
+    }
+
     @PutMapping
     public ResponseEntity<Void> updateLocation(@RequestBody LocationDTO updatedLocation) {
         locationService.updateLocation(updatedLocation);
