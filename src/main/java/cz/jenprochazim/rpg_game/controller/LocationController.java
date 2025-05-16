@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/locations")
 public class LocationController {
@@ -24,6 +26,11 @@ public class LocationController {
     @GetMapping("actual/{p}/{r}")
     public ResponseEntity<LocationDTO> getActualLocation(@PathVariable Integer p, @PathVariable Integer r){
         return ResponseEntity.ok(locationService.getActualLocation(p,r));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LocationDTO>> getAllLocations() {
+        return ResponseEntity.ok(locationService.getAllLocations());
     }
 
     @PutMapping

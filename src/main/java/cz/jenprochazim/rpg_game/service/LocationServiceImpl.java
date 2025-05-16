@@ -7,6 +7,7 @@ import cz.jenprochazim.rpg_game.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -49,6 +50,13 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public LocationDTO getActualLocation(Integer p, Integer r) {
         return locationMapper.toLocationDTO(getLocationByCoordinates(p,r));
+    }
+
+    @Override
+    public List<LocationDTO> getAllLocations() {
+        return locationRepository.findAll().stream()
+                .map(location -> locationMapper.toLocationDTO(location))
+                .toList();
     }
 
     private LocationEntity getLocationByCoordinates(int r, int p) {
