@@ -7,6 +7,7 @@ import cz.jenprochazim.rpg_game.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public void createLocation(LocationDTO newLocation) {
-        if (!isLocationUnique(newLocation.getR(), newLocation.getP())) {
+        if (!isLocationUnique(newLocation.getP(), newLocation.getR())) {
             throw new IllegalArgumentException("Lokace na techto souradnicich jiz existuje");
         }
         LocationEntity location = locationMapper.toLocationEntity(newLocation);
@@ -49,7 +50,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDTO getActualLocation(Integer p, Integer r) {
-        return locationMapper.toLocationDTO(getLocationByCoordinates(p,r));
+        return locationMapper.toLocationDTO(getLocationByCoordinates(r, p));
     }
 
     @Override
@@ -59,11 +60,36 @@ public class LocationServiceImpl implements LocationService {
                 .toList();
     }
 
-    private LocationEntity getLocationByCoordinates(int r, int p) {
-        return locationRepository.findByRAndP(r, p).orElseThrow(() -> new NoSuchElementException("Na souřadnicích r: " + r + "; p: " + p + " se nenachází žádná lokace."));
-     }
+    @Override
+    public List<LocationDTO> getNearLocation(Integer p, Integer r) {
+        int[][] offsets = {
+                {0, -1},
+                {1, -1},
+                {-1, 0},
+                {1, 0},
+                {-1, 1},
+                {0, 1}
+        };
+        return getGroupOfLocations(p, r, offsets);
+    }
 
-    private boolean isLocationUnique(int r, int p) {
-        return locationRepository.findByRAndP(r, p).isEmpty();
+    private List<LocationDTO> getGroupOfLocations(Integer p, Integer r, int[][] offsets) {
+        List<LocationDTO> locations = new ArrayList<>();
+        for (int[] offset : offsets) {
+            try {
+                locations.add(locationMapper.toLocationDTO(getLocationByCoordinates(p + offset[0], r + offset[1])));
+            } catch (NoSuchElementException ignored) {
+
+            }
+        }
+        return locations;
+    }
+
+    private LocationEntity getLocationByCoordinates(int p, int r) {
+        return locationRepository.findByPAndR(p, r).orElseThrow(() -> new NoSuchElementException("Na souřadnicích p: " + p + "; r: " + r + " se nenachází žádná lokace."));
+    }
+
+    private boolean isLocationUnique(int p, int r) {
+        return locationRepository.findByPAndR(p, r).isEmpty();
     }
 }

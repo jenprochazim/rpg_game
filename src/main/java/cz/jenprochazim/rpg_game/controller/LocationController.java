@@ -28,6 +28,11 @@ public class LocationController {
         return ResponseEntity.ok(locationService.getActualLocation(p,r));
     }
 
+    @GetMapping("near/{p}/{r}")
+    public ResponseEntity<List<LocationDTO>> getNearLocation(@PathVariable Integer p, @PathVariable Integer r){
+        return ResponseEntity.ok(locationService.getNearLocation(p,r));
+    }
+
     @GetMapping
     public ResponseEntity<List<LocationDTO>> getAllLocations() {
         return ResponseEntity.ok(locationService.getAllLocations());

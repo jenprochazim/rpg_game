@@ -12,4 +12,6 @@ public interface LocationService {
     LocationDTO getActualLocation(Integer p, Integer r);
 
     List<LocationDTO> getAllLocations();
+
+    List<LocationDTO> getNearLocation(Integer p, Integer r);
 }
