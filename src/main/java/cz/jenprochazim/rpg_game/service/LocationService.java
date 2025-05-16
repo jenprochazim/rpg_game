@@ -14,4 +14,12 @@ public interface LocationService {
     List<LocationDTO> getAllLocations();
 
     List<LocationDTO> getNearLocation(Integer p, Integer r);
+
+    List<LocationDTO> getNorthLocation(Integer p, Integer r);
+
+    List<LocationDTO> getSouthLocation(Integer p, Integer r);
+
+    List<LocationDTO> getEastLocation(Integer p, Integer r);
+
+    List<LocationDTO> getWestLocation(Integer p, Integer r);
 }

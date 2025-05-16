@@ -73,6 +73,46 @@ public class LocationServiceImpl implements LocationService {
         return getGroupOfLocations(p, r, offsets);
     }
 
+    @Override
+    public List<LocationDTO> getNorthLocation(Integer p, Integer r) {
+        int[][] offsets = {
+                {0, -2},
+                {1, -2},
+                {2, -2},
+        };
+        return getGroupOfLocations(p, r, offsets);
+    }
+
+    @Override
+    public List<LocationDTO> getSouthLocation(Integer p, Integer r) {
+        int[][] offsets = {
+                {-2, 2},
+                {-1, 2},
+                {0, 2},
+        };
+        return getGroupOfLocations(p, r, offsets);
+    }
+
+    @Override
+    public List<LocationDTO> getEastLocation(Integer p, Integer r) {
+        int[][] offsets = {
+                {2, -1},
+                {2, 0},
+                {1, 1},
+        };
+        return getGroupOfLocations(p, r, offsets);
+    }
+
+    @Override
+    public List<LocationDTO> getWestLocation(Integer p, Integer r) {
+        int[][] offsets = {
+                {-1, -1},
+                {-2, 0},
+                {-2, 1},
+        };
+        return getGroupOfLocations(p, r, offsets);
+    }
+
     private List<LocationDTO> getGroupOfLocations(Integer p, Integer r, int[][] offsets) {
         List<LocationDTO> locations = new ArrayList<>();
         for (int[] offset : offsets) {

@@ -33,6 +33,25 @@ public class LocationController {
         return ResponseEntity.ok(locationService.getNearLocation(p,r));
     }
 
+    @GetMapping("north/{p}/{r}")
+    public ResponseEntity<List<LocationDTO>> getNorthLocation(@PathVariable Integer p, @PathVariable Integer r){
+        return ResponseEntity.ok(locationService.getNorthLocation(p,r));
+    }
+    @GetMapping("south/{p}/{r}")
+    public ResponseEntity<List<LocationDTO>> getSouthLocation(@PathVariable Integer p, @PathVariable Integer r){
+        return ResponseEntity.ok(locationService.getSouthLocation(p,r));
+    }
+
+    @GetMapping("east/{p}/{r}")
+    public ResponseEntity<List<LocationDTO>> getEastLocation(@PathVariable Integer p, @PathVariable Integer r){
+        return ResponseEntity.ok(locationService.getEastLocation(p,r));
+    }
+
+    @GetMapping("west/{p}/{r}")
+    public ResponseEntity<List<LocationDTO>> getWestLocation(@PathVariable Integer p, @PathVariable Integer r){
+        return ResponseEntity.ok(locationService.getWestLocation(p,r));
+    }
+
     @GetMapping
     public ResponseEntity<List<LocationDTO>> getAllLocations() {
         return ResponseEntity.ok(locationService.getAllLocations());
