@@ -1,6 +1,7 @@
 package cz.jenprochazim.rpg_game.entity;
 
 import cz.jenprochazim.rpg_game.entity.enums.TerrainType;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,7 @@ public class LocationEntity {
     private TerrainType terrainType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id", nullable = false)
+    @JoinColumn(name = "creator_id")
     private UserEntity creator;
 
     private String note;
