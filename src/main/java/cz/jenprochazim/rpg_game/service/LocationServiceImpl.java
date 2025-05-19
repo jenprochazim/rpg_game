@@ -51,7 +51,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDTO getActualLocation(Integer p, Integer r) {
-        getConsoleMap(p, r, 2);
+        getConsoleMap(p, r, 1);
         return locationMapper.toLocationDTO(getLocationByCoordinates(p, r));
     }
 
@@ -144,6 +144,9 @@ public class LocationServiceImpl implements LocationService {
         LocationDTO newLocation = new LocationDTO();
         newLocation.setP(p);
         newLocation.setR(r);
+        newLocation.setName("");
+        newLocation.setNote("");
+        newLocation.setDescription("");
         newLocation.setTerrainType(TerrainType.EMPTY);
         newLocation.setCreator(userService.getUser(1L));
         createLocation(newLocation);
@@ -168,30 +171,15 @@ public class LocationServiceImpl implements LocationService {
                 } else if (p + r <= radius) {
                     String[] terrainSymbol = {"", ""};
 
-                    TerrainType terrainType = getLocationByCoordinates(centerP + p, centerR + r).getTerrainType();
-                    switch (terrainType) {
-                        case PATH:
-                            terrainSymbol[0] += "+ CCC ";
-                            terrainSymbol[1] += "+ CCC ";
-                            break;
-                        case PLAINS:
-                            terrainSymbol[0] += "+ PPP ";
-                            terrainSymbol[1] += "+ PPP ";
-                            break;
-                        case FORREST:
-                            terrainSymbol[0] += "+ LLL ";
-                            terrainSymbol[1] += "+ LLL ";
-                            break;
-                        default:
-                            terrainSymbol[0] += "+     ";
-                            terrainSymbol[1] += "+     ";
-                            break;
-                    }
+                    LocationEntity location = getLocationByCoordinates(centerP + p, centerR + r);
+                    //terrainSymbol[0] += "| " + (location.getName() + "   ").substring(0,3)  + " ";
+                    terrainSymbol[0] += ("|" + location.getP() + ":" + location.getR() + "      ").substring(0, 6);
+                    terrainSymbol[1] += "| " + String.valueOf(location.getTerrainType()).substring(0,3)  + " ";
                     consoleMapFraction[0].append(terrainSymbol[0]);
                     consoleMapFraction[1].append(terrainSymbol[1]);
                 }
             }
-            consoleMap.append(consoleMapFraction[0]).append("+\n").append(consoleMapFraction[1]).append("+\n");
+            consoleMap.append(consoleMapFraction[0]).append("|\n").append(consoleMapFraction[1]).append("|\n");
             consoleMapFraction[0].delete(0, consoleMapFraction[0].length());
             consoleMapFraction[1].delete(0, consoleMapFraction[1].length());
         }
