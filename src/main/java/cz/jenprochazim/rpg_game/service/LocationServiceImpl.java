@@ -52,7 +52,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public LocationDTO getActualLocation(Integer p, Integer r) {
         getConsoleMap(p, r, 2);
-        return locationMapper.toLocationDTO(getLocationByCoordinates(r, p));
+        return locationMapper.toLocationDTO(getLocationByCoordinates(p, r));
     }
 
     @Override
@@ -155,33 +155,45 @@ public class LocationServiceImpl implements LocationService {
 
     private void getConsoleMap(int centerP, int centerR, int radius) {
         StringBuilder consoleMap = new StringBuilder();
+        StringBuilder[] consoleMapFraction = new StringBuilder[2];
+        consoleMapFraction[0] = new StringBuilder();
+        consoleMapFraction[1] = new StringBuilder();
         for (int r = -radius; r <= radius; r++) {
-            consoleMap.append("  ".repeat(Math.max(0, r)));
+            consoleMapFraction[0].append("   ".repeat(Math.max(0, r)));
+            consoleMapFraction[1].append("   ".repeat(Math.max(0, r)));
             for (int p = -radius; p <= radius; p++) {
-                if (Math.abs(p + r) > radius) {
-                    consoleMap.append("  ");
-                } else {
-                    String terrainSymbol = "";
+                if (p + r < -radius) {
+                    consoleMapFraction[0].append("   ");
+                    consoleMapFraction[1].append("   ");
+                } else if (p + r <= radius) {
+                    String[] terrainSymbol = {"", ""};
 
                     TerrainType terrainType = getLocationByCoordinates(centerP + p, centerR + r).getTerrainType();
                     switch (terrainType) {
                         case PATH:
-                            terrainSymbol += "-><-";
+                            terrainSymbol[0] += "+ CCC ";
+                            terrainSymbol[1] += "+ CCC ";
                             break;
                         case PLAINS:
-                            terrainSymbol += "////";
+                            terrainSymbol[0] += "+ PPP ";
+                            terrainSymbol[1] += "+ PPP ";
                             break;
                         case FORREST:
-                            terrainSymbol += "VVVV";
+                            terrainSymbol[0] += "+ LLL ";
+                            terrainSymbol[1] += "+ LLL ";
                             break;
                         default:
-                            terrainSymbol += "XXXX";
+                            terrainSymbol[0] += "+     ";
+                            terrainSymbol[1] += "+     ";
                             break;
                     }
-                    consoleMap.append(terrainSymbol);
+                    consoleMapFraction[0].append(terrainSymbol[0]);
+                    consoleMapFraction[1].append(terrainSymbol[1]);
                 }
             }
-            consoleMap.append("\n");
+            consoleMap.append(consoleMapFraction[0]).append("+\n").append(consoleMapFraction[1]).append("+\n");
+            consoleMapFraction[0].delete(0, consoleMapFraction[0].length());
+            consoleMapFraction[1].delete(0, consoleMapFraction[1].length());
         }
         System.out.println(consoleMap);
     }
