@@ -13,7 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "location_attributes")
+@Table(name = "location_attributes",
+uniqueConstraints = @UniqueConstraint(columnNames = {"location_id", "name"}))
 public class LocationAttributeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

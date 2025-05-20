@@ -5,6 +5,7 @@ import cz.jenprochazim.rpg_game.dto.locationDTO.LocationDTO;
 import cz.jenprochazim.rpg_game.dto.locationDTO.LocationRadiusDTO;
 import cz.jenprochazim.rpg_game.service.LocationAttributeService;
 import cz.jenprochazim.rpg_game.service.LocationService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -82,6 +83,11 @@ public class LocationController {
     public ResponseEntity<Void> createAttribute(@PathVariable Integer p, @PathVariable Integer r, @RequestBody LocationAttributeDTO locationAttributeDTO) {
         locationAttributeService.createAttribute(locationAttributeDTO, p, r);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/{p}/{r}/attributes")
+    public ResponseEntity<List<LocationAttributeDTO>> getAttributesByLocation(@PathVariable Integer p, @PathVariable Integer r) {
+        return ResponseEntity.ok(locationAttributeService.getAttributesByLocation(p, r));
     }
 
 }
