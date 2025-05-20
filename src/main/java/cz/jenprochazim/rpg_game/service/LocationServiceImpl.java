@@ -1,6 +1,7 @@
 package cz.jenprochazim.rpg_game.service;
 
 import cz.jenprochazim.rpg_game.dto.locationDTO.LocationDTO;
+import cz.jenprochazim.rpg_game.dto.locationDTO.LocationRadiusDTO;
 import cz.jenprochazim.rpg_game.entity.LocationEntity;
 import cz.jenprochazim.rpg_game.entity.enums.TerrainType;
 import cz.jenprochazim.rpg_game.mapper.LocationMapper;
@@ -50,7 +51,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDTO getActualLocation(Integer p, Integer r) {
-        getConsoleMap(p, r, 1); //dočasná funkce pro zobrazování mapy v konzoli (dokud nebude existovat frontend)
+        getConsoleMap(p, r, 4); //dočasná funkce pro zobrazování mapy v konzoli (dokud nebude existovat frontend)
         return locationMapper.toLocationDTO(getLocationByCoordinates(p, r));
     }
 
@@ -114,6 +115,40 @@ public class LocationServiceImpl implements LocationService {
         return getGroupOfLocations(p, r, offsets);
     }
 
+    @Override
+    public void updateLocationRadius(LocationRadiusDTO locationRadiusDTO) {
+        Random random = new Random();
+        int centerP = locationRadiusDTO.getCenterP();
+        int centerR = locationRadiusDTO.getCenterR();
+        int radius = locationRadiusDTO.getRadius();
+        int pStart = centerP - radius;
+        int pEnd = centerP + radius;
+        int rStart = centerR - radius;
+        int rEnd = centerR + radius;
+        locationRepository.findByPBetweenAndRBetween(pStart, pEnd, rStart, rEnd).stream()
+                .filter(location -> Math.abs(location.getP() - centerP) + Math.abs(location.getR() - centerR) <= radius)
+                .filter(location -> location.getTerrainType() == TerrainType.EMPTY)
+                .forEach(location -> {
+                    int chance = random.nextInt(3);
+                    switch (locationRadiusDTO.getDensity()) {
+                        case 2:
+                            location.setTerrainType(locationRadiusDTO.getTerrainType());
+                            break;
+                        case 1:
+                            if (chance < 2) {
+                                location.setTerrainType(locationRadiusDTO.getTerrainType());
+                            }
+                            break;
+                        default:
+                            if (chance == 0) {
+                                location.setTerrainType(locationRadiusDTO.getTerrainType());
+                            }
+                            break;
+                    }
+                    locationRepository.save(location);
+                });
+    }
+
     private List<LocationDTO> getGroupOfLocations(Integer p, Integer r, int[][] offsets) {
         List<LocationDTO> locations = new ArrayList<>();
         for (int[] offset : offsets) {
@@ -123,7 +158,6 @@ public class LocationServiceImpl implements LocationService {
                 locations.add(locationMapper.toLocationDTO(location));
             } catch (NoSuchElementException ignored) {
             }
-
         }
         return locations;
     }
@@ -154,7 +188,8 @@ public class LocationServiceImpl implements LocationService {
     private boolean isLocationUnique(int p, int r) {
         return locationRepository.findByPAndR(p, r).isEmpty();
     }
-//funkce pro dočasné zobrazování mapy v konzoli (dokud nebude existovat frontend)
+
+    //funkce pro dočasné zobrazování mapy v konzoli (dokud nebude existovat frontend)
     private void getConsoleMap(int centerP, int centerR, int radius) {
         StringBuilder consoleMap = new StringBuilder();
         StringBuilder[] consoleMapFraction = new StringBuilder[2];
@@ -173,7 +208,7 @@ public class LocationServiceImpl implements LocationService {
                     LocationEntity location = getLocationByCoordinates(centerP + p, centerR + r);
                     //terrainSymbol[0] += "| " + (location.getName() + "   ").substring(0,3)  + " ";
                     terrainSymbol[0] += ("|" + location.getP() + ":" + location.getR() + "      ").substring(0, 6);
-                    terrainSymbol[1] += "| " + String.valueOf(location.getTerrainType()).substring(0,3)  + " ";
+                    terrainSymbol[1] += "| " + String.valueOf(location.getTerrainType()).substring(0, 3) + " ";
                     consoleMapFraction[0].append(terrainSymbol[0]);
                     consoleMapFraction[1].append(terrainSymbol[1]);
                 }

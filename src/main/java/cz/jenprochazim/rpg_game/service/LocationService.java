@@ -1,6 +1,7 @@
 package cz.jenprochazim.rpg_game.service;
 
 import cz.jenprochazim.rpg_game.dto.locationDTO.LocationDTO;
+import cz.jenprochazim.rpg_game.dto.locationDTO.LocationRadiusDTO;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface LocationService {
     List<LocationDTO> getEastLocation(Integer p, Integer r);
 
     List<LocationDTO> getWestLocation(Integer p, Integer r);
+
+    void updateLocationRadius(LocationRadiusDTO locationRadiusDTO);
 }

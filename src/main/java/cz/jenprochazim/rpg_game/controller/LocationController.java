@@ -2,6 +2,7 @@ package cz.jenprochazim.rpg_game.controller;
 
 import cz.jenprochazim.rpg_game.dto.locationDTO.LocationAttributeDTO;
 import cz.jenprochazim.rpg_game.dto.locationDTO.LocationDTO;
+import cz.jenprochazim.rpg_game.dto.locationDTO.LocationRadiusDTO;
 import cz.jenprochazim.rpg_game.service.LocationAttributeService;
 import cz.jenprochazim.rpg_game.service.LocationService;
 import org.apache.coyote.Response;
@@ -70,7 +71,8 @@ public class LocationController {
     }
 
     @PutMapping("/radius")
-    public ResponseEntity<Void> updateLocationRadius(@RequestBody ){
+    public ResponseEntity<Void> updateLocationRadius(@RequestBody LocationRadiusDTO locationRadiusDTO){
+        locationService.updateLocationRadius(locationRadiusDTO);
         return ResponseEntity.ok().build();
     }
 
