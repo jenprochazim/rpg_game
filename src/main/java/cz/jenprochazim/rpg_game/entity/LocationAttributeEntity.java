@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "locations")
+@Table(name = "location_attributes")
 public class LocationAttributeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
