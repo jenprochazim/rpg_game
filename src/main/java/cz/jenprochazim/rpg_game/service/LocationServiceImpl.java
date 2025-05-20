@@ -5,7 +5,6 @@ import cz.jenprochazim.rpg_game.entity.LocationEntity;
 import cz.jenprochazim.rpg_game.entity.enums.TerrainType;
 import cz.jenprochazim.rpg_game.mapper.LocationMapper;
 import cz.jenprochazim.rpg_game.repository.LocationRepository;
-import cz.jenprochazim.rpg_game.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +50,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDTO getActualLocation(Integer p, Integer r) {
-        getConsoleMap(p, r, 1);
+        getConsoleMap(p, r, 1); //dočasná funkce pro zobrazování mapy v konzoli (dokud nebude existovat frontend)
         return locationMapper.toLocationDTO(getLocationByCoordinates(p, r));
     }
 
@@ -155,7 +154,7 @@ public class LocationServiceImpl implements LocationService {
     private boolean isLocationUnique(int p, int r) {
         return locationRepository.findByPAndR(p, r).isEmpty();
     }
-
+//funkce pro dočasné zobrazování mapy v konzoli (dokud nebude existovat frontend)
     private void getConsoleMap(int centerP, int centerR, int radius) {
         StringBuilder consoleMap = new StringBuilder();
         StringBuilder[] consoleMapFraction = new StringBuilder[2];
