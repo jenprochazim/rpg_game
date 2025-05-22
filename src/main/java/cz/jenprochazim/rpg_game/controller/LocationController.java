@@ -10,6 +10,7 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class LocationController {
 
     @Autowired
     LocationAttributeService locationAttributeService;
+
+    //Správa lokací
 
     @PostMapping
     public ResponseEntity<Void> createLocation(@RequestBody LocationDTO newLocation) {
@@ -60,6 +63,7 @@ public class LocationController {
         return ResponseEntity.ok(locationService.getWestLocation(p, r));
     }
 
+    //TODO: dočasná funkce - SMAZAT
     @GetMapping
     public ResponseEntity<List<LocationDTO>> getAllLocations() {
         return ResponseEntity.ok(locationService.getAllLocations());
@@ -71,8 +75,10 @@ public class LocationController {
         return ResponseEntity.ok().build();
     }
 
+    //Nástroje pro hromadnou upravu lokaci
+
     @PutMapping("/radius")
-    public ResponseEntity<Void> updateLocationRadius(@RequestBody LocationRadiusDTO locationRadiusDTO){
+    public ResponseEntity<Void> updateLocationRadius(@RequestBody LocationRadiusDTO locationRadiusDTO) {
         locationService.updateLocationRadius(locationRadiusDTO);
         return ResponseEntity.ok().build();
     }
@@ -88,6 +94,18 @@ public class LocationController {
     @GetMapping("/{p}/{r}/attributes")
     public ResponseEntity<List<LocationAttributeDTO>> getAttributesByLocation(@PathVariable Integer p, @PathVariable Integer r) {
         return ResponseEntity.ok(locationAttributeService.getAttributesByLocation(p, r));
+    }
+
+    //TODO: dočasná funkce - SMAZAT
+    @GetMapping("/attributes")
+    public ResponseEntity<List<LocationAttributeDTO>> getAllAttributes() {
+        return ResponseEntity.ok(locationAttributeService.getAllAttributes());
+    }
+
+    @DeleteMapping("/{attributeID}/attributes")
+    public ResponseEntity<Void> deleteAttribute(@PathVariable Integer attributeID) {
+        locationAttributeService.deleteAttribute(attributeID);
+        return ResponseEntity.noContent().build();
     }
 
 }

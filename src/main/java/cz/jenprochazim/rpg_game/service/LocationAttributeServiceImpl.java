@@ -47,4 +47,17 @@ public class LocationAttributeServiceImpl implements LocationAttributeService {
                 .map(attribute -> locationAttributeMapper.toLocationAttributeDTO(attribute))
                 .toList();
     }
+
+    @Override
+    public void deleteAttribute(Integer attributeID) {
+        LocationAttributeEntity locationAttribute = locationAttributeRepository.findById(Long.valueOf(attributeID)).orElseThrow();
+        locationAttributeRepository.delete(locationAttribute);
+    }
+
+    @Override
+    public List<LocationAttributeDTO> getAllAttributes() {
+        return locationAttributeRepository.findAll().stream()
+                .map(location -> locationAttributeMapper.toLocationAttributeDTO(location))
+                .toList();
+    }
 }

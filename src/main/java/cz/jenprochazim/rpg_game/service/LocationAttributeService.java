@@ -9,4 +9,8 @@ public interface LocationAttributeService {
     void createAttribute(LocationAttributeDTO locationAttributeDTO, Integer p, Integer r);
 
     List<LocationAttributeDTO> getAttributesByLocation(Integer p, Integer r);
+
+    void deleteAttribute(Integer attributeID);
+
+    List<LocationAttributeDTO> getAllAttributes();
 }
